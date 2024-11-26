@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Details</title>
+</head>
+<body>
+    <h1>Image Details</h1>
+
+    <!-- Image will be dynamically inserted here -->
+    <img id="listingImage" alt="Listing Image" width="500px">
+
+    <script>
+        // Function to retrieve image URL from the URL query string or localStorage
+        function getImageUrl() {
+            // Option 1: Check if the image URL is passed through the query string
+            const urlParams = new URLSearchParams(window.location.search);
+            const imageUrlFromQuery = urlParams.get('image');
+
+            if (imageUrlFromQuery) {
+                return decodeURIComponent(imageUrlFromQuery);
+            }
+
+            // Option 2: Check if the image URL is stored in localStorage
+            const imageUrlFromLocalStorage = localStorage.getItem('imageUrl');
+
+            if (imageUrlFromLocalStorage) {
+                return imageUrlFromLocalStorage;
+            }
+
+            return null;
+        }
+
+        // Get the image URL and set it to the img element
+        const imageUrl = getImageUrl();
+
+        if (imageUrl) {
+            const imageElement = document.getElementById('listingImage');
+            imageElement.src = imageUrl;
+        } else {
+            console.log('No image found');
+        }
+    </script>
+</body>
+</html>

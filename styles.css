@@ -1,0 +1,75 @@
+/* Basic styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #f4f4f4;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.listings-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.listing-card {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    overflow: hidden;
+    position: relative;
+    transition: transform 0.3s;
+}
+
+.listing-card:hover {
+    transform: scale(1.05);
+}
+
+/* Correcting the size of the image */
+.listing-image {
+    width: 100%;        /* The image will always take 100% of the card's width */
+    height: 250px;      /* Fixed height */
+    object-fit: cover;  /* Ensure the image fills the area without distortion */
+    transition: filter 0.3s ease; /* Smooth transition for blur effect */
+}
+
+/* Apply blur effect when hovering over the listing card */
+.listing-card:hover .listing-image {
+    filter: blur(5px);  /* Apply blur effect */
+}
+
+.button-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.listing-card:hover .button-container {
+    opacity: 1;
+}
+
+.view-details-btn {
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.loading, .error {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.error {
+    color: red;
+}

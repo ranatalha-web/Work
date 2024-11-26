@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        /* Basic styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .listings-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        .listing-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            overflow: hidden;
+            position: relative;
+            transition: transform 0.3s;
+        }
+        .listing-card:hover {
+            transform: scale(1.05);
+        }
+        .listing-image {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            transition: filter 0.3s ease; /* Smooth transition for the blur effect */
+        }
+        /* Apply blur effect when hovering over the listing card */
+        .listing-card:hover .listing-image {
+            filter: blur(5px);  /* Apply blur effect */
+        }
+        .button-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .listing-card:hover .button-container {
+            opacity: 1;
+        }
+        .view-details-btn {
+            background-color: rgba(0, 0, 0, 0.6);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .loading, .error {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="loading" class="loading">Loading images...</div>
+        <div id="error" class="error" style="display:none;"></div>
+        <div id="gallery" class="listings-grid"></div>
+    </div>
+
+    <script>
+        async function fetchImages() {
+            const loading = document.getElementById('loading');
+            const errorElement = document.getElementById('error');
+            const gallery = document.getElementById('gallery');
+
+            try {
+                loading.style.display = 'block'; // Show loading message
+                const response = await fetch('/images'); // Adjust this endpoint as necessary
+                if (!response.ok) throw new Error('Network response was not ok');
+                const images = await response.json();
+
+                gallery.innerHTML = ''; // Clear previous content
+                loading.style.display = 'none'; // Hide loading message
+
+                if (images.length === 0) {
+                    errorElement.textContent = 'No images found.';
+                    errorElement.style.display = 'block';
+                    return;
+                }
+
+                images.forEach(image => {
+                    const container = document.createElement('div');
+                    container.className = 'listing-card';
+
+                    const img = document.createElement('img');
+                    img.alt = image.title || 'No Title';
+                    img.src = image.url || 'https://via.placeholder.com/300'; // Use a placeholder if URL is missing or invalid
+                    img.className = 'listing-image';
+
+                    // Create button container
+                    const buttonContainer = document.createElement('div');
+                    buttonContainer.className = 'button-container';
+
+                    const button = document.createElement('button');
+                    button.textContent = 'View Details';
+                    button.className = 'view-details-btn';
+                    button.onclick = () => {
+                        window.location.href = `details.html?id=${image.id}`; // Navigate to details page
+                    };
+
+                    buttonContainer.appendChild(button);
+                    container.appendChild(img);
+                    container.appendChild(buttonContainer);
+                    gallery.appendChild(container);
+                });
+            } catch (error) {
+                console.error('Error fetching images:', error);
+                errorElement.textContent = `Failed to load images: ${error.message}`;
+                errorElement.style.display = 'block';
+                loading.style.display = 'none'; // Hide loading message on error
+            }
+        }
+
+        window.onload = fetchImages; // Fetch images when the window loads
+    </script>
+</body>
+</html>
